@@ -9,22 +9,19 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>prpc-transport</artifactId>
-	<packaging>pom</packaging>
-	<modules>
-		<module>prpc-transport-contract</module>
-		<module>prpc-transport-component-netty4</module>
-	</modules>
+	<artifactId>prpc-test-integration</artifactId>
+
 
 	<dependencies>
 		<dependency>
 			<groupId>io.github.pleuvoir</groupId>
-			<artifactId>prpc-common</artifactId>
+			<artifactId>prpc-transport</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.pleuvoir</groupId>
-			<artifactId>prpc-transport-contract</artifactId>
+			<artifactId>prpc-transport-component-netty4</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
-
 </project>
