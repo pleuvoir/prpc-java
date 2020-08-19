@@ -13,17 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.pleuvoir.prpc.transport;
-
-import io.github.pleuvoir.prpc.ITransport;
+package io.github.pleuvoir.prpc.exception;
 
 /**
- * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
+ * 序列化异常
+ *
+ * @author <a href="mailto:fuwei@daojia-inc.com">pleuvoir</a>
  */
-public class DefaultTransport implements ITransport {
+public class SerializationException extends PRpcRuntimeException {
 
-  @Override
-  public String echo(String text) {
-    return text;
-  }
+
+    public SerializationException() {
+        super();
+    }
+
+    public SerializationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public SerializationException(String message) {
+        super(message);
+    }
+
+    public SerializationException(Throwable cause) {
+        super(cause);
+    }
 }

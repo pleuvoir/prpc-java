@@ -21,6 +21,7 @@
 		<lombok.version>1.18.2</lombok.version>
 		<junit.version>4.12</junit.version>
 		<guava.version>18.0</guava.version>
+    <hessian.version>3.3.6</hessian.version>
 
 	</properties>
 
@@ -33,6 +34,7 @@
 				<version>${project.version}</version>
 			</dependency>
 
+			<!-- transport contract impl-->
 			<dependency>
 				<groupId>io.github.pleuvoir</groupId>
 				<artifactId>prpc-transport-contract</artifactId>
@@ -40,7 +42,19 @@
 			</dependency>
 			<dependency>
 				<groupId>io.github.pleuvoir</groupId>
-				<artifactId>prpc-transport</artifactId>
+				<artifactId>prpc-transport-component-netty4</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+		<!-- serialization contract impl -->
+			<dependency>
+				<groupId>io.github.pleuvoir</groupId>
+				<artifactId>prpc-serialization-contract</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.github.pleuvoir</groupId>
+				<artifactId>prpc-serialization-component-hessian</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -55,6 +69,11 @@
 				<artifactId>lombok</artifactId>
 				<version>${lombok.version}</version>
 				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.alipay.sofa</groupId>
+				<artifactId>hessian</artifactId>
+				<version>${hessian.version}</version>
 			</dependency>
 			<!-- test -->
 			<dependency>

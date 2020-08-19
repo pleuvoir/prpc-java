@@ -13,17 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.pleuvoir.prpc.transport;
+package io.github.pleuvoir.prpc;
 
-import io.github.pleuvoir.prpc.ITransport;
+import io.github.pleuvoir.prpc.contract.Contract;
+import io.github.pleuvoir.prpc.exception.SerializationException;
 
 /**
- * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
+ * 序列化器
+ *
+ * @author <a href="mailto:fuwei@daojia-inc.com">pleuvoir</a>
  */
-public class DefaultTransport implements ITransport {
+@Contract
+public interface ISerializer {
 
-  @Override
-  public String echo(String text) {
-    return text;
-  }
+    /**
+     * 对象转为字节数组
+     */
+    byte[] serialize(final Object obj) throws SerializationException;
+
+    /**
+     * 字节数组转为对象
+     */
+    <T> T deserialize(final byte[] bytes, final Class<T> clazz) throws SerializationException;
 }

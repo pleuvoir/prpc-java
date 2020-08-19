@@ -13,24 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.pleuvoir.test.integration.transport;
+package io.github.pleuvoir.test.integration.serialization;
 
+import io.github.pleuvoir.prpc.HessianSerializer;
+import io.github.pleuvoir.prpc.ISerializer;
 import io.github.pleuvoir.prpc.ITransport;
 import io.github.pleuvoir.prpc.contract.DefaultContractFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
+ * @author <a href="mailto:fuwei@daojia-inc.com">pleuvoir</a>
  */
-public class ITransportTest {
-
+public class ISerializerTest {
 
     @Test
     public void load() throws Exception {
         DefaultContractFactory factory = new DefaultContractFactory();
         factory.setLocation(DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY);
-        ITransport mock1 = factory.getOrEmpty(ITransport.class, "mock1");
-        System.out.println(mock1.echo("hello"));
+        ISerializer hessian = factory.getOrEmpty(ISerializer.class, "hessian");
+
+        System.out.println(hessian);
     }
 
 }

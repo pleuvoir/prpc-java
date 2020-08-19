@@ -29,6 +29,7 @@
     <module>prpc-transport</module>
     <module>prpc-bom</module>
     <module>prpc-test-integration</module>
+    <module>prpc-serialization</module>
   </modules>
 
   <dependencyManagement>
