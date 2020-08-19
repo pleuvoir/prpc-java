@@ -31,35 +31,35 @@ import java.io.Serializable;
  */
 public class HessianSerializer implements ISerializer {
 
-    private SerializerFactory serializerFactory = new SerializerFactory();
+  private SerializerFactory serializerFactory = new SerializerFactory();
 
-    @Override
-    public byte[] serialize(Object obj) throws SerializationException {
-        ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-        Hessian2Output output = new Hessian2Output(byteArray);
-        output.setSerializerFactory(serializerFactory);
-        try {
-            output.writeObject(obj);
-            output.close();
-        } catch (IOException e) {
-            throw new SerializationException("IOException occurred when Hessian serializer encode!", e);
-        }
-
-        return byteArray.toByteArray();
+  @Override
+  public byte[] serialize(Object obj) throws SerializationException {
+    ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+    Hessian2Output output = new Hessian2Output(byteArray);
+    output.setSerializerFactory(serializerFactory);
+    try {
+      output.writeObject(obj);
+      output.close();
+    } catch (IOException e) {
+      throw new SerializationException("IOException occurred when Hessian serializer encode!", e);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
-        Hessian2Input input = new Hessian2Input(new ByteArrayInputStream(bytes));
-        input.setSerializerFactory(this.serializerFactory);
-        Object resultObject;
-        try {
-            resultObject = input.readObject();
-            input.close();
-        } catch (IOException e) {
-            throw new SerializationException("IOException occurred when Hessian serializer decode!", e);
-        }
-        return (T) resultObject;
+    return byteArray.toByteArray();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
+    Hessian2Input input = new Hessian2Input(new ByteArrayInputStream(bytes));
+    input.setSerializerFactory(this.serializerFactory);
+    Object resultObject;
+    try {
+      resultObject = input.readObject();
+      input.close();
+    } catch (IOException e) {
+      throw new SerializationException("IOException occurred when Hessian serializer decode!", e);
     }
+    return (T) resultObject;
+  }
 }

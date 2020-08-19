@@ -15,11 +15,8 @@
  */
 package io.github.pleuvoir.test.integration.serialization;
 
-import io.github.pleuvoir.prpc.HessianSerializer;
 import io.github.pleuvoir.prpc.ISerializer;
-import io.github.pleuvoir.prpc.ITransport;
 import io.github.pleuvoir.prpc.contract.DefaultContractFactory;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -27,13 +24,13 @@ import org.junit.Test;
  */
 public class ISerializerTest {
 
-    @Test
-    public void load() throws Exception {
-        DefaultContractFactory factory = new DefaultContractFactory();
-        factory.setLocation(DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY);
-        ISerializer hessian = factory.getOrEmpty(ISerializer.class, "hessian");
+  @Test
+  public void load() throws Exception {
+    DefaultContractFactory factory = new DefaultContractFactory();
+    factory.setLocation(DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY);
+    ISerializer hessian = factory.getOrEmpty(ISerializer.class, "hessian");
 
-        System.out.println(hessian);
-    }
+    System.out.println(hessian);
+  }
 
 }

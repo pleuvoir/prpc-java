@@ -26,13 +26,13 @@ import io.github.pleuvoir.prpc.exception.SerializationException;
 @Contract
 public interface ISerializer {
 
-    /**
-     * 对象转为字节数组
-     */
-    byte[] serialize(final Object obj) throws SerializationException;
+  /**
+   * 对象转为字节数组
+   */
+  byte[] serialize(final Object obj) throws SerializationException;
 
-    /**
-     * 字节数组转为对象
-     */
-    <T> T deserialize(final byte[] bytes, final Class<T> clazz) throws SerializationException;
+  /**
+   * 字节数组转为对象
+   */
+  <T> T deserialize(final byte[] bytes, final Class<T> clazz) throws SerializationException;
 }
