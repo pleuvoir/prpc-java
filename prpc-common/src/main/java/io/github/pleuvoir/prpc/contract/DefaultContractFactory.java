@@ -22,10 +22,10 @@ import io.github.pleuvoir.prpc.exception.PRpcRuntimeException;
 import io.github.pleuvoir.prpc.tookit.ClassUtils;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 默认的契约工厂实现
@@ -51,11 +51,10 @@ public class DefaultContractFactory implements IContractFactory {
     public void load() throws Exception {
         Stopwatch stopwatch = Stopwatch.createStarted();
 
-        Set<Path> contractFilePaths = ClassUtils.findAllClassRootFilesPath("META-INF/contracts");
+        this.resetLocation();
 
         //约定：每个文件名都是接口全路径
-        for (Path filePath : contractFilePaths) {
-
+        for (Path filePath : ClassUtils.findAllClassRootFilesPath(location)) {
             log.info("install contract path={}", filePath.toAbsolutePath());
 
             String interfaceName = filePath.toFile().getName();
@@ -75,6 +74,12 @@ public class DefaultContractFactory implements IContractFactory {
             }
         }
         log.info("load contracts end, cost {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    }
+
+    private void resetLocation() {
+        if (StringUtils.isBlank(location)) {
+            this.location = DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY;
+        }
     }
 
     /**
