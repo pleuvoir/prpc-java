@@ -15,15 +15,16 @@
  */
 package io.github.pleuvoir.prpc.contract;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
 import io.github.pleuvoir.prpc.exception.PRpcRuntimeException;
 import io.github.pleuvoir.prpc.tookit.ClassUtils;
-import java.io.File;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,96 +35,69 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultContractFactory implements IContractFactory {
 
-  public static final String DEFAULT_CONTRACT_DIRECTORY = "META-INF/contracts/";
+    public static final String DEFAULT_CONTRACT_DIRECTORY = "META-INF/contracts";
 
-  private String location;
+    private String location;
 
-  private Table<Class<?>, String, Object> CONTRACT_INSTANCE_TABLE = Tables
-      .newCustomTable(new ConcurrentHashMap<>(), ConcurrentHashMap::new);
+    private Table<Class<?>, String, Object> CONTRACT_INSTANCE_TABLE = Tables
+            .newCustomTable(new ConcurrentHashMap<>(), ConcurrentHashMap::new);
 
-  @Override
-  public void setLocation(String location) {
-    this.location = location;
-  }
-
-  /**
-   * 加载当前类所在契约包{@link #setLocation(String)}
-   */
-  private <T> void loadFromClass(Class<T> clazz) throws Exception {
-    if (clazz.getAnnotation(Contract.class) == null) {
-      log.error("try to load contract from class {}, but not found @Contract.", clazz);
-      return;
+    @Override
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    URL url = ClassUtils.getClassLoader(clazz).getResource(this.location);
-    if (url == null) {
-      log.error("try to load contract from class {}, but url is null.", clazz);
-      return;
-    }
+    @Override
+    public void load() throws Exception {
+        Stopwatch stopwatch = Stopwatch.createStarted();
 
-    String path = url.getPath();
-    log.info("load contract, path={}", path);
+        Set<Path> contractFilePaths = ClassUtils.findAllClassRootFilesPath("META-INF/contracts");
 
-    File dir = new File(path);
-    if (!dir.isDirectory() || !dir.exists()) {
-      return;
-    }
+        //约定：每个文件名都是接口全路径
+        for (Path filePath : contractFilePaths) {
 
-    File[] files = dir.listFiles();
-    if (files == null || files.length == 0) {
-      return;
-    }
+            log.info("install contract path={}", filePath.toAbsolutePath());
 
-    //约定：每个文件名都是接口全路径
-    for (File file : files) {
-      String interfaceName = file.getName();
+            String interfaceName = filePath.toFile().getName();
 
-      for (String line : Files.readAllLines(Paths.get(file.getPath()))) {
-        if (line.startsWith("#")) {
-          continue;
+            for (String line : Files.readAllLines(filePath)) {
+
+                String[] pairs = line.split("=");
+                String name = pairs[0];
+                String impl = pairs[1];
+
+                final Class<?> interfaceClazz = ClassUtils.forName(interfaceName);
+                //必须要有注解
+                this.checkContract(interfaceClazz);
+
+                Object instance = ClassUtils.newInstanceNoConstructor(impl);
+                CONTRACT_INSTANCE_TABLE.put(interfaceClazz, name, instance);
+            }
         }
-
-        String[] pairs = line.split("=");
-        String name = pairs[0];
-        String impl = pairs[1];
-
-        final Class<?> interfaceClazz = ClassUtils.forName(interfaceName);
-        Object instance = ClassUtils.newInstanceNoConstructor(impl);
-        CONTRACT_INSTANCE_TABLE.put(interfaceClazz, name, instance);
-      }
-    }
-  }
-
-  private Object getInner(Class<?> clazz, String name) {
-    return this.CONTRACT_INSTANCE_TABLE.get(clazz, name);
-  }
-
-  @Override
-  public <T> T getOrEmpty(Class<T> clazz, String name) {
-    Object previous = this.getInner(clazz, name);
-    if (previous != null) {
-      return ClassUtils.cast(clazz, previous);
+        log.info("load contracts end, cost {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
-    synchronized (this) {
-      try {
-        //  double check after lock
-        Object next = this.getInner(clazz, name);
-        if (next != null) {
-          return ClassUtils.cast(clazz, next);
+    /**
+     * 强制使用注解标记，统一规范
+     */
+    private void checkContract(Class<?> clazz) {
+        if (clazz.getAnnotation(Contract.class) == null) {
+            log.error("try to load contract from class {}, but not found @Contract.", clazz);
+            throw new PRpcRuntimeException("must use @Contract bind class {}", clazz);
         }
-
-        this.loadFromClass(clazz);
-      } catch (Exception e) {
-        throw new PRpcRuntimeException(e);
-      }
     }
 
-    Object current = this.getInner(clazz, name);
-    if (current == null) {
-      log.error("get contract but return null, clazz={}, name={}", clazz, name);
+    private Object getInner(Class<?> clazz, String name) {
+        return this.CONTRACT_INSTANCE_TABLE.get(clazz, name);
     }
-    return current == null ? null : ClassUtils.cast(clazz, current);
-  }
+
+    @Override
+    public <T> T getOrEmpty(Class<T> clazz, String name) {
+        Object previous = this.getInner(clazz, name);
+        if (previous != null) {
+            return ClassUtils.cast(clazz, previous);
+        }
+        return null;
+    }
 
 }

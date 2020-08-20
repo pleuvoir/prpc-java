@@ -22,19 +22,23 @@ package io.github.pleuvoir.prpc.exception;
  */
 public class PRpcRuntimeException extends RuntimeException {
 
-  public PRpcRuntimeException() {
-  }
+    public PRpcRuntimeException() {
+    }
 
-  public PRpcRuntimeException(String message) {
-    super(message);
-  }
+    public PRpcRuntimeException(String message) {
+        super(message);
+    }
 
-  public PRpcRuntimeException(String message, Throwable cause) {
-    super(message, cause);
-  }
+    public PRpcRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-  public PRpcRuntimeException(Throwable cause) {
-    super(cause);
-  }
+    public PRpcRuntimeException(Throwable cause) {
+        super(cause);
+    }
+
+    public PRpcRuntimeException(String message, Object... args) {
+        super(String.format(message, args));
+    }
 
 }

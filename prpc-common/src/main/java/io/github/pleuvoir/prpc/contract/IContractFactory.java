@@ -23,16 +23,21 @@ package io.github.pleuvoir.prpc.contract;
 public interface IContractFactory {
 
 
-  /**
-   * 设置包路径
-   */
-  void setLocation(String location);
+    /**
+     * 设置包路径
+     */
+    void setLocation(String location);
 
 
-  /**
-   * 获取具体的实现类，获取失败时返回null
-   */
-  <T> T getOrEmpty(Class<T> clazz, String name);
+    /**
+     * 加载
+     */
+    void load() throws Exception;
+
+    /**
+     * 获取具体的实现类，获取失败时返回null
+     */
+    <T> T getOrEmpty(Class<T> clazz, String name);
 
 
 }

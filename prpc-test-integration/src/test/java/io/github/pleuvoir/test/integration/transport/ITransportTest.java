@@ -25,12 +25,13 @@ import org.junit.Test;
 public class ITransportTest {
 
 
-  @Test
-  public void load() throws Exception {
-    DefaultContractFactory factory = new DefaultContractFactory();
-    factory.setLocation(DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY);
-    ITransport mock1 = factory.getOrEmpty(ITransport.class, "mock1");
-    System.out.println(mock1.echo("hello"));
-  }
+    @Test
+    public void load() throws Exception {
+        DefaultContractFactory factory = new DefaultContractFactory();
+        factory.setLocation(DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY);
+        factory.load();
+        ITransport mock1 = factory.getOrEmpty(ITransport.class, "mock1");
+        System.out.println(mock1.echo("hello"));
+    }
 
 }
