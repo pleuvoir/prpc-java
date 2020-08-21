@@ -27,7 +27,7 @@ public class ISerializerTest {
 
     @Test
     public void load() throws Exception {
-        DefaultContractFactory factory = new DefaultContractFactory();
+        DefaultContractFactory factory = DefaultContractFactory.INSTANCE;
         factory.setLocation(DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY);
         factory.load();
         ISerializer hessian = factory.getOrEmpty(ISerializer.class, "hessian");

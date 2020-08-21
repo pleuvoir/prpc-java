@@ -27,8 +27,9 @@ public class ITransportTest {
 
     @Test
     public void load() throws Exception {
-        DefaultContractFactory factory = new DefaultContractFactory();
+        DefaultContractFactory factory = DefaultContractFactory.INSTANCE;
         factory.setLocation(DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY);
+        factory.load();
         factory.load();
         ITransport mock1 = factory.getOrEmpty(ITransport.class, "mock1");
         System.out.println(mock1.echo("hello"));

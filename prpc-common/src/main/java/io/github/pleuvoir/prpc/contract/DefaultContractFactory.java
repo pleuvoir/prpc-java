@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,12 +36,18 @@ import org.apache.commons.lang3.StringUtils;
 @Slf4j
 public class DefaultContractFactory implements IContractFactory {
 
+    public static final DefaultContractFactory INSTANCE = new DefaultContractFactory();
+
     public static final String DEFAULT_CONTRACT_DIRECTORY = "META-INF/contracts";
 
     private String location;
 
     private Table<Class<?>, String, Object> CONTRACT_INSTANCE_TABLE = Tables
             .newCustomTable(new ConcurrentHashMap<>(), ConcurrentHashMap::new);
+
+    private AtomicBoolean loaded = new AtomicBoolean(false);
+
+    private DefaultContractFactory() {}
 
     @Override
     public void setLocation(String location) {
@@ -49,23 +56,25 @@ public class DefaultContractFactory implements IContractFactory {
 
     @Override
     public void load() throws Exception {
+        if (!loaded.compareAndSet(false, true)) {
+            log.error("DefaultContractFactory has already load.");
+            return;
+        }
+
         Stopwatch stopwatch = Stopwatch.createStarted();
 
         this.resetLocation();
 
         //约定：每个文件名都是接口全路径
         for (Path filePath : ClassUtils.findAllClassRootFilesPath(location)) {
-            log.info("install contract path={}", filePath.toAbsolutePath());
-
-            String interfaceName = filePath.toFile().getName();
+            log.info("loop load contract path={}", filePath.toAbsolutePath());
 
             for (String line : Files.readAllLines(filePath)) {
-
                 String[] pairs = line.split("=");
                 String name = pairs[0];
                 String impl = pairs[1];
 
-                final Class<?> interfaceClazz = ClassUtils.forName(interfaceName);
+                final Class<?> interfaceClazz = ClassUtils.forName(filePath.toFile().getName());
                 //必须要有注解
                 this.checkContract(interfaceClazz);
 
@@ -73,12 +82,15 @@ public class DefaultContractFactory implements IContractFactory {
                 CONTRACT_INSTANCE_TABLE.put(interfaceClazz, name, instance);
             }
         }
+
+        loaded.set(true);
         log.info("load contracts end, cost {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
     private void resetLocation() {
         if (StringUtils.isBlank(location)) {
-            this.location = DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY;
+            log.warn("not found contract location, use default location: {}", location);
+            this.location = DEFAULT_CONTRACT_DIRECTORY;
         }
     }
 
@@ -105,4 +117,14 @@ public class DefaultContractFactory implements IContractFactory {
         return null;
     }
 
+    /**
+     * 通过此方法获取工厂实例<br>
+     * <b>注意：必须先完成 {@linkplain #load() 加载操作}</b>
+     */
+    public IContractFactory getInstance() {
+        if (loaded.get()) {
+            return INSTANCE;
+        }
+        throw new PRpcRuntimeException("DefaultContractFactory暂未加载，请先完成加载操作。");
+    }
 }
