@@ -37,9 +37,7 @@ public enum DefaultContractFactorySingleton implements ISingleton<DefaultContrac
   @Override
   public void set(DefaultContractFactory instance) {
     Preconditions.checkArgument(instance != null);
-
-    boolean b = init.compareAndSet(false, true);
-    if (!b) {
+    if (!init.compareAndSet(false, true)) {
       throw new PRpcRuntimeException("{} 已经初始化，请勿重复设置。", instance.getClass());
     }
     impl = instance;
@@ -47,9 +45,9 @@ public enum DefaultContractFactorySingleton implements ISingleton<DefaultContrac
 
   @Override
   public DefaultContractFactory getInstance() {
-    if (impl == null) {
-      throw new IllegalStateException(String.format("%s 未初始化，请设置后再调用。", this.getClass()));
+    if (init.get()) {
+      return DefaultContractFactorySingleton.INSTANCE.impl;
     }
-    return DefaultContractFactorySingleton.INSTANCE.impl;
+    throw new IllegalStateException(String.format("%s 未初始化，请设置后再调用。", this.getClass()));
   }
 }
