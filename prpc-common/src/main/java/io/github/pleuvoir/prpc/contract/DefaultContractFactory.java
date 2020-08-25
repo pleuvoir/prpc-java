@@ -36,95 +36,83 @@ import org.apache.commons.lang3.StringUtils;
 @Slf4j
 public class DefaultContractFactory implements IContractFactory {
 
-    public static final DefaultContractFactory INSTANCE = new DefaultContractFactory();
+  public static final String DEFAULT_CONTRACT_DIRECTORY = "META-INF/contracts";
 
-    public static final String DEFAULT_CONTRACT_DIRECTORY = "META-INF/contracts";
+  private String location;
 
-    private String location;
+  private Table<Class<?>, String, Object> CONTRACT_INSTANCE_TABLE = Tables
+      .newCustomTable(new ConcurrentHashMap<>(), ConcurrentHashMap::new);
 
-    private Table<Class<?>, String, Object> CONTRACT_INSTANCE_TABLE = Tables
-            .newCustomTable(new ConcurrentHashMap<>(), ConcurrentHashMap::new);
+  private final AtomicBoolean loaded = new AtomicBoolean(false);
 
-    private AtomicBoolean loaded = new AtomicBoolean(false);
+  @Override
+  public void setLocation(String location) {
+    this.location = location;
+  }
 
-    private DefaultContractFactory() {}
-
-    @Override
-    public void setLocation(String location) {
-        this.location = location;
+  @Override
+  public void load() throws Exception {
+    if (!loaded.compareAndSet(false, true)) {
+      log.error("DefaultContractFactory has already loaded.");
+      return;
     }
 
-    @Override
-    public void load() throws Exception {
-        if (!loaded.compareAndSet(false, true)) {
-            log.error("DefaultContractFactory has already load.");
-            return;
-        }
+    log.info("load contracts begin, start @{}", System.currentTimeMillis());
 
-        Stopwatch stopwatch = Stopwatch.createStarted();
+    Stopwatch stopwatch = Stopwatch.createStarted();
 
-        this.resetLocation();
+    this.resetLocation();
 
-        //约定：每个文件名都是接口全路径
-        for (Path filePath : ClassUtils.findAllClassRootFilesPath(location)) {
-            log.info("loop load contract path={}", filePath.toAbsolutePath());
+    //约定：每个文件名都是接口全路径
+    for (Path filePath : ClassUtils.findAllClassRootFilesPath(location)) {
+      log.info("loop load contract path={}", filePath.toAbsolutePath());
 
-            for (String line : Files.readAllLines(filePath)) {
-                String[] pairs = line.split("=");
-                String name = pairs[0];
-                String impl = pairs[1];
+      for (String line : Files.readAllLines(filePath)) {
+        String[] pairs = line.split("=");
+        String name = pairs[0];
+        String impl = pairs[1];
 
-                final Class<?> interfaceClazz = ClassUtils.forName(filePath.toFile().getName());
-                //必须要有注解
-                this.checkContract(interfaceClazz);
+        final Class<?> interfaceClazz = ClassUtils.forName(filePath.toFile().getName());
+        //必须要有注解
+        this.checkContract(interfaceClazz);
 
-                Object instance = ClassUtils.newInstanceNoConstructor(impl);
-                CONTRACT_INSTANCE_TABLE.put(interfaceClazz, name, instance);
-            }
-        }
-
-        loaded.set(true);
-        log.info("load contracts end, cost {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        Object instance = ClassUtils.newInstanceNoConstructor(impl);
+        CONTRACT_INSTANCE_TABLE.put(interfaceClazz, name, instance);
+      }
     }
 
-    private void resetLocation() {
-        if (StringUtils.isBlank(location)) {
-            log.warn("not found contract location, use default location: {}", location);
-            this.location = DEFAULT_CONTRACT_DIRECTORY;
-        }
-    }
+    loaded.set(true);
+    log.info("load contracts end, cost {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+  }
 
-    /**
-     * 强制使用注解标记，统一规范
-     */
-    private void checkContract(Class<?> clazz) {
-        if (clazz.getAnnotation(Contract.class) == null) {
-            log.error("try to load contract from class {}, but not found @Contract.", clazz);
-            throw new PRpcRuntimeException("must use @Contract bind class {}", clazz);
-        }
+  private void resetLocation() {
+    if (StringUtils.isBlank(location)) {
+      log.warn("not found contract location, use default location: {}", location);
+      this.location = DEFAULT_CONTRACT_DIRECTORY;
     }
+  }
 
-    private Object getInner(Class<?> clazz, String name) {
-        return this.CONTRACT_INSTANCE_TABLE.get(clazz, name);
+  /**
+   * 强制使用注解标记，统一规范
+   */
+  private void checkContract(Class<?> clazz) {
+    if (clazz.getAnnotation(Contract.class) == null) {
+      log.error("try to load contract from class {}, but not found @Contract.", clazz);
+      throw new PRpcRuntimeException("must use @Contract bind class {}", clazz);
     }
+  }
 
-    @Override
-    public <T> T getOrEmpty(Class<T> clazz, String name) {
-        Object previous = this.getInner(clazz, name);
-        if (previous != null) {
-            return ClassUtils.cast(clazz, previous);
-        }
-        return null;
-    }
+  private Object getInner(Class<?> clazz, String name) {
+    return this.CONTRACT_INSTANCE_TABLE.get(clazz, name);
+  }
 
-    /**
-     * 通过此方法获取工厂实例<br>
-     * <b>注意：必须先完成 {@linkplain #load() 加载操作}</b>
-     */
-    public IContractFactory getInstance() {
-        if (loaded.get()) {
-            return INSTANCE;
-        }
-        throw new PRpcRuntimeException("DefaultContractFactory暂未加载，请先完成加载操作。");
+  @Override
+  public <T> T getOrEmpty(Class<T> clazz, String name) {
+    Object previous = this.getInner(clazz, name);
+    if (previous != null) {
+      return ClassUtils.cast(clazz, previous);
     }
+    return null;
+  }
+
 }

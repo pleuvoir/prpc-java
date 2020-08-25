@@ -25,8 +25,9 @@ public class DefaultContractFactoryTest {
 
   @Test
   public void load() throws Exception {
-    DefaultContractFactory factory =  DefaultContractFactory.INSTANCE;
+    DefaultContractFactory factory =  new DefaultContractFactory();
     factory.setLocation(DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY);
+    factory.load();
 
     IMock mock1 = factory.getOrEmpty(IMock.class, "mock1");
 

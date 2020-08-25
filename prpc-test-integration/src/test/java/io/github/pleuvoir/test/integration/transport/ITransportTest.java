@@ -17,6 +17,7 @@ package io.github.pleuvoir.test.integration.transport;
 
 import io.github.pleuvoir.prpc.ITransport;
 import io.github.pleuvoir.prpc.contract.DefaultContractFactory;
+import io.github.pleuvoir.test.integration.serialization.ISerializerTest;
 import org.junit.Test;
 
 /**
@@ -27,7 +28,7 @@ public class ITransportTest {
 
     @Test
     public void load() throws Exception {
-        DefaultContractFactory factory = DefaultContractFactory.INSTANCE;
+        DefaultContractFactory factory = new DefaultContractFactory();
         factory.setLocation(DefaultContractFactory.DEFAULT_CONTRACT_DIRECTORY);
         factory.load();
         factory.load();
