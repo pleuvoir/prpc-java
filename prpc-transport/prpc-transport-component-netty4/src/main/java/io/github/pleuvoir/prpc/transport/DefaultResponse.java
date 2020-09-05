@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.pleuvoir.prpc;
+package io.github.pleuvoir.prpc.transport;
+
+import io.github.pleuvoir.prpc.IResponse;
 
 /**
- * Response Interface
- *
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */
-public interface IResponse {
+public class DefaultResponse implements IResponse {
 
-  /**
-   * 如果正常则返回值
-   */
-  Object getValue();
+  @Override
+  public Object getValue() {
+    return null;
+  }
 
-  /**
-   * 获取异常
-   */
-  Throwable failureCause();
+  @Override
+  public Throwable failureCause() {
+    return null;
+  }
 
-  /**
-   * 和发送时requestID一致
-   */
-  long getRequestId();
+  @Override
+  public long getRequestId() {
+    return 0;
+  }
 }

@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.pleuvoir.prpc;
+package io.github.pleuvoir.prpc.transport;
 
 /**
- * Response Interface
+ * 异步回调，发送异步请求时使用
  *
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */
-public interface IResponse {
+public interface InvokeCallback {
 
   /**
-   * 如果正常则返回值
+   * 接收到响应时触发
    */
-  Object getValue();
+  void onReceiveResponse(final RemotingFuture remotingFuture);
 
   /**
-   * 获取异常
+   * 发送异常时触发
    */
-  Throwable failureCause();
-
-  /**
-   * 和发送时requestID一致
-   */
-  long getRequestId();
+  void onRequestException(final RemotingFuture remotingFuture);
 }

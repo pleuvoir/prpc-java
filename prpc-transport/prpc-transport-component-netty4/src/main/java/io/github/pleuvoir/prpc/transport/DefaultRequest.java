@@ -13,27 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.pleuvoir.prpc;
+package io.github.pleuvoir.prpc.transport;
+
+import io.github.pleuvoir.prpc.IRequest;
+import java.util.Map;
 
 /**
- * Response Interface
- *
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */
-public interface IResponse {
+public class DefaultRequest implements IRequest {
 
-  /**
-   * 如果正常则返回值
-   */
-  Object getValue();
+  @Override
+  public String getInterfaceName() {
+    return null;
+  }
 
-  /**
-   * 获取异常
-   */
-  Throwable failureCause();
+  @Override
+  public String getMethodName() {
+    return null;
+  }
 
-  /**
-   * 和发送时requestID一致
-   */
-  long getRequestId();
+  @Override
+  public Object[] getArguments() {
+    return new Object[0];
+  }
+
+  @Override
+  public Map<String, String> getAttachments() {
+    return null;
+  }
+
+  @Override
+  public long getRequestId() {
+    return 0;
+  }
+
+  @Override
+  public void setTimeout(long milliseconds) {
+
+  }
+
+  @Override
+  public long timeoutMillis() {
+    return 0;
+  }
 }

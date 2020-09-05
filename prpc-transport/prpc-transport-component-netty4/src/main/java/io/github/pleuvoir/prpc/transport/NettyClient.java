@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2020 pleuvoir (pleuvior@foxmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.github.pleuvoir.prpc.transport;
 
 import io.github.pleuvoir.prpc.ChannelState;
@@ -37,8 +52,8 @@ public class NettyClient extends AbstractPooledNettyClient {
   }
 
   @Override
-  protected BasePoolableObjectFactory createChannelFactory() {
-    return null;
+  protected BasePoolableObjectFactory<NettyChannel> createChannelFactory() {
+    return new NettyChannelFactory(this);
   }
 
   @Override
@@ -49,29 +64,29 @@ public class NettyClient extends AbstractPooledNettyClient {
           url.getUri() + MixUtils.toString(request));
     }
     //发送实际请求
-    return null;
+    return this.request(request, true);
   }
 
-  private IResponse request(IRequest request, boolean async){
-    IChannel channel = null;
-
+  private IResponse request(IRequest request, boolean async) {
     IResponse response = null;
-
+    IChannel channel = null;
     //从连接池拿连接
     try {
+      //拿到的是 NettyChannel
       channel = this.borrowObject();
-      if(channel == null){
+      if (channel == null) {
         throw new TransportException("borrowObject return null: message=%s",
             url.getUri() + MixUtils.toString(request));
       }
-
-
-
+      //同步请求
+      response = channel.request(request);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.info("请求失败。", e);  //TODO
+    } finally {
+      //归还到连接池中
+      this.returnObject(channel);
     }
-
-    return null;
+    return response;
   }
 
 
@@ -163,4 +178,7 @@ public class NettyClient extends AbstractPooledNettyClient {
     }
   }
 
+  public Bootstrap getBootstrap() {
+    return bootstrap;
+  }
 }
