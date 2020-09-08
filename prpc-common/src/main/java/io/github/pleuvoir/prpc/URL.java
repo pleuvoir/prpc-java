@@ -34,6 +34,10 @@ public class URL {
   @Setter
   private Integer port;
 
+  public URL(String ip, Integer port) {
+    this.ip = ip;
+    this.port = port;
+  }
 
   public String getIp() {
     return ip;

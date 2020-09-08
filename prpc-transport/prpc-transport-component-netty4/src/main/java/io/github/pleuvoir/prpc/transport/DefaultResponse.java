@@ -15,25 +15,36 @@
  */
 package io.github.pleuvoir.prpc.transport;
 
-import io.github.pleuvoir.prpc.IResponse;
-
 /**
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */
-public class DefaultResponse implements IResponse {
+public class DefaultResponse {
 
-  @Override
+  private Object value;
+  private Throwable failureCause;
+  private long requestId;
+
   public Object getValue() {
-    return null;
+    return value;
   }
 
-  @Override
-  public Throwable failureCause() {
-    return null;
+  public void setValue(Object value) {
+    this.value = value;
   }
 
-  @Override
+  public Throwable getFailureCause() {
+    return failureCause;
+  }
+
+  public void setFailureCause(Throwable failureCause) {
+    this.failureCause = failureCause;
+  }
+
   public long getRequestId() {
-    return 0;
+    return requestId;
+  }
+
+  public void setRequestId(long requestId) {
+    this.requestId = requestId;
   }
 }

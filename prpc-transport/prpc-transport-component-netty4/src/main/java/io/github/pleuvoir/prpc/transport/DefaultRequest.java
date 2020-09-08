@@ -15,46 +15,66 @@
  */
 package io.github.pleuvoir.prpc.transport;
 
-import io.github.pleuvoir.prpc.IRequest;
+import com.google.common.collect.Maps;
 import java.util.Map;
 
 /**
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */
-public class DefaultRequest implements IRequest {
+public class DefaultRequest {
 
-  @Override
+  private String interfaceName = "";
+  private String methodName = "";
+  private String requestDesc = "";
+  private Object[] arguments = new Object[]{};
+  private long requestId = 0;
+  private Map<String, String> attachments = Maps.newHashMap();
+
+  public String getRequestDesc() {
+    return requestDesc;
+  }
+
+  public void setRequestDesc(String requestDesc) {
+    this.requestDesc = requestDesc;
+  }
+
   public String getInterfaceName() {
-    return null;
+    return interfaceName;
   }
 
-  @Override
+  public void setInterfaceName(String interfaceName) {
+    this.interfaceName = interfaceName;
+  }
+
   public String getMethodName() {
-    return null;
+    return methodName;
   }
 
-  @Override
+  public void setMethodName(String methodName) {
+    this.methodName = methodName;
+  }
+
   public Object[] getArguments() {
-    return new Object[0];
+    return arguments;
   }
 
-  @Override
-  public Map<String, String> getAttachments() {
-    return null;
+  public void setArguments(Object[] arguments) {
+    this.arguments = arguments;
   }
 
-  @Override
   public long getRequestId() {
-    return 0;
+    return requestId;
   }
 
-  @Override
-  public void setTimeout(long milliseconds) {
-
+  public void setRequestId(long requestId) {
+    this.requestId = requestId;
   }
 
-  @Override
-  public long timeoutMillis() {
-    return 0;
+  public Map<String, String> getAttachments() {
+    return attachments;
+  }
+
+  public void setAttachments(Map<String, String> attachments) {
+    this.attachments = attachments;
   }
 }

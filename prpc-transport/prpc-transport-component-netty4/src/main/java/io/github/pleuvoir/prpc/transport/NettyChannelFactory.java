@@ -22,7 +22,7 @@ import org.apache.commons.pool.BasePoolableObjectFactory;
 /**
  * 池化对象工厂
  *
- * <p>这个对象需要 URL 相关信息，因此会传递 NettyClient
+ * <p>这个对象需要URL相关信息，因此会传递 NettyClient
  *
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */

@@ -100,14 +100,13 @@ public class NettyClient extends AbstractPooledNettyClient {
         .option(ChannelOption.SO_KEEPALIVE, true)
         .option(ChannelOption.TCP_NODELAY, true)
         .handler(new ChannelInitializer<SocketChannel>() {
-
           @Override
           protected void initChannel(SocketChannel ch) throws Exception {
             ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 12, 4));
             //  ch.pipeline().addLast(SingletonFactoy.get(RemoteCommandCodecHandler.class));
             ch.pipeline()
                 .addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS)); // 30秒没有读事件发送心跳到服务端
-            //   ch.pipeline().addLast(new HealthyChecker(SimpleClient.this));
+               ch.pipeline().addLast(new HealthyChecker(NettyClient.this));
             //   ch.pipeline().addLast(new NettyClientHandler());
           }
         });
@@ -159,10 +158,11 @@ public class NettyClient extends AbstractPooledNettyClient {
    * @param remoteAddress 远端地址
    * @param retryTimes    重试次数
    */
-  protected ChannelFuture doConnectWithRetry(SocketAddress remoteAddress, int retryTimes) {
+  public ChannelFuture doConnectWithRetry(SocketAddress remoteAddress, int retryTimes) {
     ChannelFuture future = bootstrap.connect(remoteAddress);
     future.awaitUninterruptibly(); // connect不可以使用sync会报错
     if (future.isSuccess()) {
+      this.channelState = ChannelState.ALIVE;
       logger.info("客户端已连接远程节点：[{}]", future.channel().remoteAddress());
       return future;
     } else if (retryTimes == 0) {
