@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import sun.awt.image.PixelConverter.UshortGray;
 
 /**
  * Hessian序列化实现，待传输的类必须实现{@link Serializable}接口
@@ -30,6 +31,8 @@ import java.io.Serializable;
  * @author <a href="mailto:fuwei@daojia-inc.com">pleuvoir</a>
  */
 public class HessianSerializer implements ISerializer {
+
+  public static final HessianSerializer INSTANCE = new HessianSerializer();
 
   private SerializerFactory serializerFactory = new SerializerFactory();
 

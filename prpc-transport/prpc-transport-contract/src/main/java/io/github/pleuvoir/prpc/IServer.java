@@ -15,6 +15,7 @@
  */
 package io.github.pleuvoir.prpc;
 
+import io.github.pleuvoir.prpc.exception.TransportException;
 import java.util.Collection;
 
 /**
@@ -32,6 +33,6 @@ public interface IServer extends IChannel {
   /**
    * 获取所有已经建联的通道
    */
-  Collection<IChannel> getChannels();
+  Collection<IChannel> getChannels() throws TransportException;
 
 }

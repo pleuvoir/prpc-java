@@ -25,6 +25,7 @@
 		<hessian.version>4.0.38</hessian.version>
 		<commons.lang3.version>3.5</commons.lang3.version>
 		<commons.pool.version>1.6</commons.pool.version>
+		<reflections.version>0.9.9-RC1</reflections.version>
 		<netty.version>4.1.42.Final</netty.version>
 
 	</properties>
@@ -74,6 +75,11 @@
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.reflections</groupId>
+				<artifactId>reflections</artifactId>
+				<version>${reflections.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.projectlombok</groupId>

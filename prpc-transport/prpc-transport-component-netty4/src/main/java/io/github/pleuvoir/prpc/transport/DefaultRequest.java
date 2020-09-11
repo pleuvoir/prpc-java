@@ -16,12 +16,19 @@
 package io.github.pleuvoir.prpc.transport;
 
 import com.google.common.collect.Maps;
+import java.io.Serializable;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */
-public class DefaultRequest {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DefaultRequest implements Serializable {
 
   private String interfaceName = "";
   private String methodName = "";
@@ -29,52 +36,7 @@ public class DefaultRequest {
   private Object[] arguments = new Object[]{};
   private long requestId = 0;
   private Map<String, String> attachments = Maps.newHashMap();
+  private int requestCode;
 
-  public String getRequestDesc() {
-    return requestDesc;
-  }
 
-  public void setRequestDesc(String requestDesc) {
-    this.requestDesc = requestDesc;
-  }
-
-  public String getInterfaceName() {
-    return interfaceName;
-  }
-
-  public void setInterfaceName(String interfaceName) {
-    this.interfaceName = interfaceName;
-  }
-
-  public String getMethodName() {
-    return methodName;
-  }
-
-  public void setMethodName(String methodName) {
-    this.methodName = methodName;
-  }
-
-  public Object[] getArguments() {
-    return arguments;
-  }
-
-  public void setArguments(Object[] arguments) {
-    this.arguments = arguments;
-  }
-
-  public long getRequestId() {
-    return requestId;
-  }
-
-  public void setRequestId(long requestId) {
-    this.requestId = requestId;
-  }
-
-  public Map<String, String> getAttachments() {
-    return attachments;
-  }
-
-  public void setAttachments(Map<String, String> attachments) {
-    this.attachments = attachments;
-  }
 }
