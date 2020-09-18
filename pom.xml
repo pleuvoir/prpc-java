@@ -30,6 +30,7 @@
 		<module>prpc-bom</module>
 		<module>prpc-test-integration</module>
 		<module>prpc-serialization</module>
+		<module>prpc-core</module>
 	</modules>
 
 	<dependencyManagement>

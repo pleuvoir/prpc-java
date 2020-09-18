@@ -27,7 +27,7 @@ public class RemoteCommandCodecHelper {
     // 指令
     buffer.writeInt(command.getRequestCode());
     // 序列化算法
-    //  buffer.writeInt(defaultImpl.getSerializerAlgorithm().getCode());
+    buffer.writeInt(command.getSerialCode());
     // 长度位
     buffer.writeInt(bytes.length);
     // 内容
@@ -40,10 +40,10 @@ public class RemoteCommandCodecHelper {
   public static RemotingCommand decode(ByteBuf byteBuf) {
     // 跳过前4个字节（一个Int）的魔数
     byteBuf.skipBytes(4);
-//    // 指令
+    // 指令
     int requestCode = byteBuf.readInt();
-//    // 序列化算法
-//    int algorithmCode = byteBuf.readInt();
+    // 序列化算法
+    int serialCode = byteBuf.readInt();
     // 长度位
     int length = byteBuf.readInt();
     // 读取数据
@@ -53,6 +53,7 @@ public class RemoteCommandCodecHelper {
     Class<? extends RemotingCommand> cmdClazz = SingletonFactoy.get(RemoteCommandFactory.class)
         .fromRequestCode(requestCode);
     // 获取序列化器进行反序列化
+   // SingletonFactoy.get()
     return serializer.deserialize(bytes, cmdClazz);
   }
 

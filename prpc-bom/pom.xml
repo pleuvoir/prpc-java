@@ -38,6 +38,11 @@
 				<artifactId>prpc-common</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>io.github.pleuvoir</groupId>
+				<artifactId>prpc-transport</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<!-- transport contract impl-->
 			<dependency>

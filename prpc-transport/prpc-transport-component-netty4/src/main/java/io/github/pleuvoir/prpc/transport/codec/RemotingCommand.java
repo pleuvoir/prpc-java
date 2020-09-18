@@ -10,4 +10,7 @@ public class RemotingCommand {
 
   // 指令，用于匹配远程命令
   protected int requestCode;
+
+  // 序列化编码
+  protected int serialCode;
 }

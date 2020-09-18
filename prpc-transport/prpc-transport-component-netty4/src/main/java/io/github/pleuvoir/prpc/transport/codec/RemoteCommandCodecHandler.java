@@ -5,10 +5,10 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
+ * 编码器
+ *
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */
 @ChannelHandler.Sharable
@@ -18,7 +18,6 @@ public class RemoteCommandCodecHandler extends MessageToMessageCodec<ByteBuf, Re
   protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> out) {
     RemotingCommand response = RemoteCommandCodecHelper.decode(byteBuf);
     out.add(response);
-  //  LOG.debug("解码成功。{}", JSON.toJSONString(response));
   }
 
   @Override
@@ -26,8 +25,6 @@ public class RemoteCommandCodecHandler extends MessageToMessageCodec<ByteBuf, Re
     ByteBuf byteBuf = ctx.channel().alloc().ioBuffer();
     RemoteCommandCodecHelper.encode(byteBuf, request);
     out.add(byteBuf);
-  //  LOG.debug("编码成功。{}", JSON.toJSONString(request));
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(RemoteCommandCodecHandler.class);
 }
