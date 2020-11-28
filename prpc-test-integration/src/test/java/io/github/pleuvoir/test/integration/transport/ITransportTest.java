@@ -15,8 +15,8 @@
  */
 package io.github.pleuvoir.test.integration.transport;
 
-import io.github.pleuvoir.prpc.ITransport;
 import io.github.pleuvoir.prpc.contract.DefaultContractFactory;
+import io.github.pleuvoir.prpc.transport.ITransport;
 import io.github.pleuvoir.test.integration.serialization.ISerializerTest;
 import org.junit.Test;
 

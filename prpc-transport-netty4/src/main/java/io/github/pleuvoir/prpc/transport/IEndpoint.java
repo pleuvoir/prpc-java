@@ -15,15 +15,11 @@
  */
 package io.github.pleuvoir.prpc.transport;
 
-import io.github.pleuvoir.prpc.ITransport;
-
 /**
+ * Process Communication端点，更好的语义
+ *
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */
-public class DefaultTransport implements ITransport {
+public interface IEndpoint extends IChannel {
 
-  @Override
-  public String echo(String text) {
-    return text;
-  }
 }

@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.pleuvoir.prpc;
+package io.github.pleuvoir.prpc.transport;
+
+import io.github.pleuvoir.prpc.contract.Contract;
 
 /**
- * Client逻辑抽象
- *
- * <p>客户端在应用层实现心跳
- *
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */
-public interface IClient extends IChannel {
+@Contract
+public interface ITransport {
 
-  /**
-   * 发送心跳报文
-   */
-  void heartbeat(IRequest request);
+  String echo(String text);
+
 }

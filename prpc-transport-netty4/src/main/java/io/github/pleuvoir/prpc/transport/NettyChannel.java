@@ -17,7 +17,6 @@ package io.github.pleuvoir.prpc.transport;
 
 import com.google.common.base.Stopwatch;
 import io.github.pleuvoir.prpc.ChannelState;
-import io.github.pleuvoir.prpc.IChannel;
 import io.github.pleuvoir.prpc.IRequest;
 import io.github.pleuvoir.prpc.IResponse;
 import io.github.pleuvoir.prpc.URL;

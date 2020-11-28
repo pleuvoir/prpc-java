@@ -1,12 +1,11 @@
 package io.github.pleuvoir.prpc.transport.server;
 
 import io.github.pleuvoir.prpc.ChannelState;
-import io.github.pleuvoir.prpc.IChannel;
 import io.github.pleuvoir.prpc.IRequest;
 import io.github.pleuvoir.prpc.IResponse;
-import io.github.pleuvoir.prpc.IServer;
 import io.github.pleuvoir.prpc.URL;
 import io.github.pleuvoir.prpc.exception.TransportException;
+import io.github.pleuvoir.prpc.transport.IChannel;
 import java.net.InetSocketAddress;
 import java.util.Collection;
 

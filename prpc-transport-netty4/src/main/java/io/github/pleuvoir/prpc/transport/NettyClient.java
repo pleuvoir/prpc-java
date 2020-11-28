@@ -16,7 +16,6 @@
 package io.github.pleuvoir.prpc.transport;
 
 import io.github.pleuvoir.prpc.ChannelState;
-import io.github.pleuvoir.prpc.IChannel;
 import io.github.pleuvoir.prpc.IRequest;
 import io.github.pleuvoir.prpc.IResponse;
 import io.github.pleuvoir.prpc.URL;

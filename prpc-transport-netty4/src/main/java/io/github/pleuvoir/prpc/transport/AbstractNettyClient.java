@@ -16,7 +16,6 @@
 package io.github.pleuvoir.prpc.transport;
 
 import io.github.pleuvoir.prpc.ChannelState;
-import io.github.pleuvoir.prpc.IEndpoint;
 import io.github.pleuvoir.prpc.URL;
 import java.net.InetSocketAddress;
 import org.slf4j.Logger;

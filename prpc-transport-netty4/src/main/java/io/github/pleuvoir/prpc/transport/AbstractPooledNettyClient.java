@@ -15,7 +15,6 @@
  */
 package io.github.pleuvoir.prpc.transport;
 
-import io.github.pleuvoir.prpc.IChannel;
 import io.github.pleuvoir.prpc.URL;
 import io.github.pleuvoir.prpc.exception.PRpcRuntimeException;
 import java.util.Objects;

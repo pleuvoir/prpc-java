@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.pleuvoir.prpc;
+package io.github.pleuvoir.prpc.transport;
 
-import io.github.pleuvoir.prpc.contract.Contract;
 
 /**
  * @author <a href="mailto:pleuvior@foxmail.com">pleuvoir</a>
  */
-@Contract
-public interface ITransport {
+public class DefaultTransport implements ITransport {
 
-  String echo(String text);
-
+  @Override
+  public String echo(String text) {
+    return text;
+  }
 }
