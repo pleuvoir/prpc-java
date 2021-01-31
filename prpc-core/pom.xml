@@ -17,6 +17,13 @@
 			<groupId>io.github.pleuvoir</groupId>
 			<artifactId>prpc-transport-netty4</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.23.1-GA</version>
+		</dependency>
+
 	</dependencies>
 
 </project>
